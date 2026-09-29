@@ -1,0 +1,97 @@
+######## TASK 1: STORAGE ########
+
+Storage statistics
+==========================================
+| Block size (bytes)            |   4096 |
+| Record size (bytes)           |     28 |
+| Number of records stored      |  26552 |
+| Rows skipped (missing fields) |     99 |
+| Records per block             |    146 |
+| Number of blocks              |    182 |
+| Database file size (bytes)    | 745472 |
+==========================================
+
+######## TASK 2: B+ TREE ########
+
+B+ tree statistics (bulk loaded in 4.091 ms)
+====================================
+| Parameter n             |    340 |
+| Number of nodes         |     80 |
+| Number of levels        |      2 |
+| Number of leaf nodes    |     79 |
+| Number of index entries |  26552 |
+| Structure check         | passed |
+====================================
+Root node keys (78 keys, internal node):
+  0.338 0.354 0.364 0.370 0.376 0.381 0.385 0.389 0.393 0.397
+  0.400 0.402 0.405 0.408 0.411 0.413 0.416 0.418 0.420 0.423
+  0.425 0.427 0.429 0.431 0.433 0.435 0.437 0.439 0.441 0.443
+  0.444 0.447 0.448 0.451 0.452 0.455 0.456 0.458 0.460 0.462
+  0.463 0.465 0.467 0.469 0.471 0.472 0.474 0.476 0.478 0.481
+  0.482 0.484 0.487 0.488 0.490 0.494 0.494 0.500 0.500 0.500
+  0.506 0.506 0.511 0.513 0.516 0.519 0.522 0.525 0.529 0.533
+  0.538 0.543 0.548 0.554 0.562 0.571 0.588 0.603
+  Note: repeated values separate entries with the same FG_PCT_home;
+  the full keys (FG_PCT_home, record id) are:
+    (0.494, 4950)  (0.494, 21047)  (0.500, 1625)  (0.500, 12553)  (0.500, 23734)
+    (0.506, 6658)  (0.506, 24222)
+
+######## TASK 3: DELETE FG_PCT_home > 0.5 ########
+
+Retrieval using the B+ tree (averaged over 10 runs)
+======================================================
+| Index nodes accessed                    |       20 |
+| Data blocks accessed                    |      182 |
+| Number of games deleted                 |     6054 |
+| Average FG_PCT_home of returned records | 0.536966 |
+| Running time of retrieval (ms)          |   0.7097 |
+======================================================
+
+Brute force linear scan (averaged over 10 runs)
+===================================
+| Data blocks accessed |      182 |
+| Matching records     |     6054 |
+| Average FG_PCT_home  | 0.536966 |
+| Running time (ms)    |   0.5905 |
+===================================
+
+Full deletion process (search, tree updates, data blocks)
+===========================================
+| Index node reads              |   20071 |
+| Index node writes             |   14222 |
+| Distinct index nodes accessed |      21 |
+| Data block reads              |     182 |
+| Data block writes             |     182 |
+| Distinct data blocks accessed |     182 |
+| Running time of deletion (ms) | 57.7812 |
+===========================================
+
+######## UPDATED B+ TREE ########
+
+B+ tree statistics after deletion
+====================================
+| Parameter n             |    340 |
+| Number of nodes         |     62 |
+| Number of levels        |      2 |
+| Number of leaf nodes    |     61 |
+| Number of index entries |  20498 |
+| Structure check         | passed |
+====================================
+Root node keys (60 keys, internal node):
+  0.338 0.354 0.364 0.370 0.376 0.381 0.385 0.389 0.393 0.397
+  0.400 0.402 0.405 0.408 0.411 0.413 0.416 0.418 0.420 0.423
+  0.425 0.427 0.429 0.431 0.433 0.435 0.437 0.439 0.441 0.443
+  0.444 0.447 0.448 0.451 0.452 0.455 0.456 0.458 0.460 0.462
+  0.463 0.465 0.467 0.469 0.471 0.472 0.474 0.476 0.478 0.481
+  0.482 0.484 0.487 0.488 0.490 0.494 0.494 0.500 0.500 0.500
+  Note: repeated values separate entries with the same FG_PCT_home;
+  the full keys (FG_PCT_home, record id) are:
+    (0.494, 4950)  (0.494, 21047)  (0.500, 1625)  (0.500, 12553)  (0.500, 21572)
+
+Consistency checks
+==============================================
+| Deleted count matches linear scan    | yes |
+| Records above 0.5 left in data file  |   0 |
+| Entries above 0.5 left in tree       |   0 |
+| Tree entries equal remaining records | yes |
+==============================================
